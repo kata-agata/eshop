@@ -103,14 +103,14 @@ class UsersRepository {
   }
 }
 
-const test = async () => {
-  const repo = new UsersRepository('users.json'); // create file in current directory
+//module.exports = UsersRepository; // inside other file we should have:
+//const UsersRepository = require('./users');
+//const repo = new UsersRepository('users.json');
+//this is not good, because if we use it in diffrent file we can made as accident two writeFileSync
 
-
-  const users = await repo.getAll();
-
-  const user = await repo.getOneBy({id: "17e73c63"});
-  console.log(user);
-}
-
-test();
+//better way:
+module.exports = new UsersRepository('users.json');
+//we will receive the instance of users repository
+//in other file:
+//const repo = require('./users');
+//repo.getAll();
