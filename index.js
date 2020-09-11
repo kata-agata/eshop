@@ -76,7 +76,9 @@ app.post('/signin', async (req,res)=>{
     res.send('User does not exist');
   }
 
-  if(currUser.password !== password){
+  const validPassword = await usersRepo.comparePasswords(currUser.password,password);
+
+  if(!validPassword){
     res.send('wrong password');
   }
 
