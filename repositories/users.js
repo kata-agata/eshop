@@ -37,6 +37,7 @@ class UsersRepository {
     records.push(attrs);
 
     await this.writeAll(records);
+    return attrs; // we need return id
   }
 
   async writeAll(records){
