@@ -1,35 +1,52 @@
 const express = require('express');
+const {check, validationResult} = require('express-validator'); // we dont have to write expressValidator.check
 const usersRepo = require('../../repositories/users');
+const signinTemplate = require('../../views/admin/auth/signin');
+const signupTemplate = require('../../views/admin/auth/signup');
 
 const router = express.Router();
 
 //req - request
 //res - response
 router.get('/signup', (req, res) => {
-  res.send(`
-      <div>
-        Your id is: ${req.session.userId}
-        <form method="POST">
-          <input name="email" placeholder="email"/>
-          <input name="password" placeholder="password"/>
-          <input name="passwordConfirmation" placeholder="password confirmation"/>
-          <button>Sign up</button>
-        </form>
-      </div>
-    `); // resposne send
+  res.send(signupTemplate({req})); // resposne send
 });
 
 //with library bodyParser
-router.post('/signup', async (req, res) => {
+router.post('/signup', [
+  check('email')
+    .trim()
+    .normalizeEmail()
+    .isEmail()
+    .withMessage('Must be valid email')
+    .custom(async email => {
+      const existingUser = await usersRepo.getOneBy({email});
+      if(existingUser){
+        throw new Error('Email in use');
+      }
+    }),
+  check('password')
+    .trim()
+    .isLength({min:4, max:20})
+    .withMessage('Must be between 4 and 20 characters'),
+  check('passwordConfirmation')
+    .trim()
+    .isLength({min:4, max:20})
+    .withMessage('Must be between 4 and 20 characters')
+    .custom((passwordConfirmation, {req}) => { //{req} is same as obj.req
+      if(passwordConfirmation !== req.body.password){
+        throw new Error('Passwords must much');
+      }
+    }),
+],
+async (req, res) => {
+  const errors = validationResult(req);
+  console.log(errors);
   const {email, password, passwordConfirmation } = req.body;
-  const existingUser = await usersRepo.getOneBy({email});
-  if(existingUser){
-    return res.send('Email in use');
-  }
 
-  if(password !== passwordConfirmation){
-    return res.send('passwords must much');
-  }
+
+
+
 
   //create user in user repo
   const user = await usersRepo.create({email, password});// method create return attrs
@@ -48,16 +65,7 @@ router.get('/signout', (req,res)=>{
 });
 
 router.get('/signin', (req,res)=>{
-  res.send(`
-    <div>
-
-      <form method="POST">
-        <input name="email" placeholder="email"/>
-        <input name="password" placeholder="password"/>
-        <button>Sign in</button>
-      </form>
-    </div>
-    `);
+  res.send(signinTemplate());
 });
 
 router.post('/signin', async (req,res)=>{
