@@ -1,5 +1,5 @@
 const express = require('express');
-const {check, validationResult} = require('express-validator'); // we dont have to write expressValidator.check
+const {handleErrors} = require('./middlewares');
 const usersRepo = require('../../repositories/users');
 const signinTemplate = require('../../views/admin/auth/signin');
 const signupTemplate = require('../../views/admin/auth/signup');
@@ -25,14 +25,10 @@ router.post('/signup', [
   requirePassword,
   requirePasswordConfirmation
 ],
+handleErrors(signupTemplate),
 async (req, res) => {
-  const errors = validationResult(req);
-  console.log(errors);
-  if(!errors.isEmpty()){
-    return res.send(signupTemplate({req, errors}));
-  }
 
-  const {email, password, passwordConfirmation } = req.body;
+  const {email, password } = req.body;
 
   //create user in user repo
   const user = await usersRepo.create({email, password});// method create return attrs
@@ -56,13 +52,8 @@ router.post('/signin', [
   requireEmailExists,
   requireValidPasswordForUser
 ],
+handleErrors(signinTemplate),
 async (req,res)=>{
-  const errors = validationResult(req);
-
-  if(!errors.isEmpty()){
-    return res.send(signinTemplate({errors}));
-  }
-
   const {email} = req.body;
   const currUser = await usersRepo.getOneBy({email});
 
