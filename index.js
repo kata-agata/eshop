@@ -5,6 +5,7 @@ const authRouter = require('./routes/admin/auth');
 
 const app = express();
 
+app.use(express.static('public'));// if there is a request e.g main.css it is looking in public directory, every static request is checked here
 app.use(bodyParser.urlencoded({extended: true}));// doing parsing of form automatically
 app.use(cookieSession({
   keys:['bgvfcrtxchgvtcy']
