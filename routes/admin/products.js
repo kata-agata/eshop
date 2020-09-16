@@ -1,8 +1,16 @@
 const express = require( 'express');
 const productsRepo = require('../../repositories/products');
 const productsNewTemplate = require('../../views/admin/products/new');
+<<<<<<< HEAD
 const productsIndexTemplate = require('../../views/admin/products/index');
 const productsEditTemplate = require('../../views/admin/products/edit');
+=======
+<<<<<<< Updated upstream
+=======
+const productsIndexTemplate = require('../../views/admin/products/index');
+const productsEditTemplate = require('../../views/admin/products/edit');
+>>>>>>> Stashed changes
+>>>>>>> 2097d6f0f2460e5387ceb4946d42709c26df33ec
 const {requireTitle, requirePrice} = require('./validators');
 const multer = require('multer');
 const {handleErrors, requireAuth} = require('./middlewares');
@@ -35,6 +43,13 @@ async (req,res) => {
 
   await productsRepo.create({ title, price, image });
 
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+  res.send('submitted')
+})
+=======
+>>>>>>> 2097d6f0f2460e5387ceb4946d42709c26df33ec
   res.redirect('/admin/products');
 });
 
@@ -48,6 +63,12 @@ async (req,res) => {
   }
 
   res.send(productsEditTemplate({product}));
+<<<<<<< HEAD
+=======
+
+});
+>>>>>>> Stashed changes
+>>>>>>> 2097d6f0f2460e5387ceb4946d42709c26df33ec
 
 });
 
