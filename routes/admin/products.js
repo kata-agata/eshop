@@ -1,9 +1,11 @@
 const express = require( 'express');
 const productsRepo = require('../../repositories/products');
 const productsNewTemplate = require('../../views/admin/products/new');
+const productsIndexTemplate = require('../../views/admin/products/index');
+const productsEditTemplate = require('../../views/admin/products/edit');
 const {requireTitle, requirePrice} = require('./validators');
 const multer = require('multer');
-const {handleErrors} = require('./middlewares');
+const {handleErrors, requireAuth} = require('./middlewares');
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -29,8 +31,29 @@ async (req,res) => {
 
   await productsRepo.create({ title, price, image });
 
-  res.send('submitted')
-})
+  res.redirect('/admin/products');
+});
 
+// :id is a wild card for id
+router.get('/admin/products/:id/edit', requireAuth,
+async (req,res) => {
+  const product = await productsRepo.getOne(req.params.id);
+
+  if(!product) {
+    return res.send('Product not found');
+  }
+
+  res.send(productsEditTemplate({product}));
+
+});
+
+router.post('/admin/products/:id/edit',
+  requireAuth,
+  upload.single('image'),
+  [requireTitle,requirePrice],
+  handleErrors(productsEditTemplate),
+async (req,res) => {
+
+});
 
 module.exports = router;
