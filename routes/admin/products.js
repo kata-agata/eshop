@@ -1,6 +1,11 @@
 const express = require( 'express');
 const productsRepo = require('../../repositories/products');
 const productsNewTemplate = require('../../views/admin/products/new');
+<<<<<<< Updated upstream
+=======
+const productsIndexTemplate = require('../../views/admin/products/index');
+const productsEditTemplate = require('../../views/admin/products/edit');
+>>>>>>> Stashed changes
 const {requireTitle, requirePrice} = require('./validators');
 const multer = require('multer');
 const {handleErrors} = require('./middlewares');
@@ -29,8 +34,26 @@ async (req,res) => {
 
   await productsRepo.create({ title, price, image });
 
+<<<<<<< Updated upstream
   res.send('submitted')
 })
+=======
+  res.redirect('/admin/products');
+});
+
+// :id is a wild card for id
+router.get('/admin/products/:id/edit', requireAuth,
+async (req,res) => {
+  const product = await productsRepo.getOne(req.params.id);
+
+  if(!product) {
+    return res.send('Product not found');
+  }
+
+  res.send(productsEditTemplate({product}));
+
+});
+>>>>>>> Stashed changes
 
 
 module.exports = router;
