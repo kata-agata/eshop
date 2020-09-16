@@ -36,7 +36,7 @@ async (req, res) => {
   //store id inside users cookie
   //req.session === {} // added by cookieSession
   req.session.userId = user.id;//userId is name, so it can be any other name like userNumber
-  res.send('account created');
+  res.redirect('/admin/products');
 });
 
 router.get('/signout', (req,res)=>{
@@ -58,7 +58,7 @@ async (req,res)=>{
   const currUser = await usersRepo.getOneBy({email});
 
   req.session.userId = currUser.id;
-  res.send('you are logged');
+  res.redirect('/admin/products');
 });
 
 module.exports = router;
