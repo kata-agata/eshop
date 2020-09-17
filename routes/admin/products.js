@@ -5,11 +5,16 @@ const { handleErrors, requireAuth } = require('./middlewares');
 const productsRepo = require('../../repositories/products');
 const productsNewTemplate = require('../../views/admin/products/new');
 const productsIndexTemplate = require('../../views/admin/products/index');
+
 const productsEditTemplate = require('../../views/admin/products/edit');
 const { requireTitle, requirePrice } = require('./validators');
 
+const multer = require('multer');
+
+
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
+
 
 router.get('/admin/products', requireAuth, async (req, res) => {
   const products = await productsRepo.getAll();
