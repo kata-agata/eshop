@@ -41,7 +41,7 @@ async (req, res) => {
 
 router.get('/signout', (req,res)=>{
   req.session = null; //forget all information inside cookie
-  res.send('You are loged out');
+  res.redirect('/signin');
 });
 
 router.get('/signin', (req,res)=>{

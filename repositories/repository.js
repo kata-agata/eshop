@@ -65,7 +65,6 @@ module.exports = class Repository {
     //const recordUpdate = await this.getOne(id); !acnt do like this, because we need entire records list, to write them back to json file
     const records = await this.getAll();
     const record = records.find(record => record.id === id);
-    console.log(record);
      if(!record){
        throw new Error(`Record with id ${id} not found`);
      }
