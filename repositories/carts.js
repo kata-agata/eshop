@@ -1,7 +1,5 @@
 const Repository = require('./repository');
 
-class CartsRepository extends Repository{
+class CartsRepository extends Repository {}
 
-}
-
-module.export = new CartsRepository('carts.json');
+module.exports = new CartsRepository('carts.json');
